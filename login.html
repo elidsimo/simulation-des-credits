@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Simulation de Crédits</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Particules d'arrière-plan animées */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(44, 83, 100, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(32, 58, 67, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(15, 32, 39, 0.3) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(20px) rotate(240deg); }
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            width: 420px;
+            max-width: 90vw;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            color: white;
+            animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #0f2027, #203a43, #2c5364, #203a43, #0f2027);
+            background-size: 400% 400%;
+            border-radius: 26px;
+            z-index: -1;
+            animation: gradientShift 8s ease infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .auth-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #9bd6ef, #60c9ec, #09aef5);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+            text-shadow: 0 0 30px rgba(44, 83, 100, 0.5);
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes titleGlow {
+            from { filter: drop-shadow(0 0 5px rgba(44, 83, 100, 0.5)); }
+            to { filter: drop-shadow(0 0 20px rgba(44, 83, 100, 0.8)); }
+        }
+
+        .auth-header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 1.8rem;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 16px 50px 16px 16px;
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            outline: none;
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-wrapper input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .input-wrapper input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(102, 126, 234, 0.6);
+            box-shadow: 
+                0 0 0 3px rgba(102, 126, 234, 0.2),
+                0 8px 25px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.7;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .input-wrapper i:hover {
+            opacity: 1;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 10px 25px rgba(102, 126, 234, 0.4),
+                0 0 30px rgba(102, 126, 234, 0.3);
+            background: linear-gradient(135deg, #7c8fe8, #8a5cb8);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 1.5rem;
+        }
+
+        .forgot-password a {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .forgot-password a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: white;
+        }
+
+        .forgot-password a:hover::after {
+            width: 100%;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .signup-link p {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 0.8rem;
+        }
+
+        .signup-link a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .signup-link a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .error-message, .success-message {
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+            font-weight: 500;
+        }
+
+        .error-message {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ffcdd2;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .success-message {
+            background: rgba(76, 175, 80, 0.2);
+            color: #c8e6c9;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+
+        .error-message.show, .success-message.show {
+            display: block;
+            animation: slideInBounce 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes slideInBounce {
+            from { 
+                opacity: 0; 
+                transform: translateY(-20px) scale(0.8); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            z-index: 5;
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 2rem;
+                width: 95vw;
+                margin: 2rem auto;
+            }
+
+            .auth-header h1 {
+                font-size: 2rem;
+            }
+
+            .input-wrapper input {
+                padding: 14px 45px 14px 14px;
+                font-size: 14px;
+            }
+
+            .btn {
+                padding: 14px;
+                font-size: 15px;
+            }
+
+            footer {
+                position: relative;
+                margin-top: 2rem;
+            }
+        }
+
+        /* Animation de chargement pour les icônes */
+        .fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>Connexion</h1>
+            <p>Accédez à votre espace de simulation</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+
+        <form id="loginForm" method="POST" action="login_process.php">
+            <div class="input-wrapper">
+                <input type="email" name="email" placeholder="Adresse email" required autocomplete="email">
+                <i class="fas fa-envelope"></i>
+            </div>
+
+            <div class="input-wrapper">
+                <input type="password" name="mot_de_passe" id="password" placeholder="Mot de passe" required autocomplete="current-password">
+                <i class="fas fa-eye" id="togglePassword"></i>
+            </div>
+
+            <button type="submit" class="btn">
+                <span id="btnText">Se connecter</span>
+                <i class="fas fa-spinner" id="btnLoader" style="display: none;"></i>
+            </button>
+        </form>
+
+        <div class="forgot-password">
+            <a href="forgot_password.html" id="forgotPasswordLink">Mot de passe oublié ?</a>
+        </div>
+
+        <div class="signup-link">
+            <p>Pas encore de compte ?</p>
+            <a href="signup.html">Créer un compte</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 CreditSim. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        // ✅ CORRECTION PRINCIPALE - Vérifier les messages d'erreur/succès depuis l'URL
+        window.addEventListener('DOMContentLoaded', function() {
+            // Récupérer les paramètres de l'URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+            const success = urlParams.get('success');
+            
+            console.log('Error param:', error); // Debug
+            console.log('Success param:', success); // Debug
+            
+            if (error) {
+                showMessage('error', decodeURIComponent(error));
+                // Nettoyer l'URL après affichage
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+            }
+            
+            if (success) {
+                showMessage('success', decodeURIComponent(success));
+                // Nettoyer l'URL après affichage
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+            }
+        });
+
+        // ✅ Fonction améliorée pour afficher les messages
+        function showMessage(type, message) {
+            const messageElement = document.getElementById(type === 'error' ? 'errorMessage' : 'successMessage');
+            const otherMessageElement = document.getElementById(type === 'error' ? 'successMessage' : 'errorMessage');
+            
+            // Cacher l'autre message s'il est visible
+            otherMessageElement.classList.remove('show');
+            otherMessageElement.style.display = 'none';
+            
+            // Afficher le nouveau message
+            messageElement.textContent = message;
+            messageElement.style.display = 'block';
+            messageElement.classList.add('show');
+            
+            // Auto-hide après 6 secondes
+            setTimeout(() => {
+                messageElement.classList.remove('show');
+                setTimeout(() => {
+                    messageElement.style.display = 'none';
+                }, 500); // Attendre la fin de l'animation
+            }, 6000);
+        }
+
+        // Toggle mot de passe avec animation
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const password = document.getElementById('password');
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            
+            // Animation de l'icône
+            this.style.transform = 'translateY(-50%) scale(0.8)';
+            setTimeout(() => {
+                password.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+                this.style.transform = 'translateY(-50%) scale(1)';
+            }, 150);
+        });
+
+        // ✅ CORRECTION - Gestion du formulaire sans empêcher la soumission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const btn = document.querySelector('.btn');
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+            
+            // Cacher les anciens messages
+            document.getElementById('errorMessage').classList.remove('show');
+            document.getElementById('successMessage').classList.remove('show');
+            
+            // Animation de chargement
+            btn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoader.style.display = 'inline-block';
+            
+            // Note: Le formulaire se soumet normalement vers PHP
+            // L'animation de chargement sera interrompue par la redirection
+        });
+
+        // Animation au focus des inputs
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Effet de parallaxe subtil sur le mouvement de la souris
+        let isMouseMoveEnabled = true;
+        document.addEventListener('mousemove', function(e) {
+            if (!isMouseMoveEnabled) return;
+            
+            const container = document.querySelector('.auth-container');
+            const x = (e.clientX / window.innerWidth) * 5; // Réduit l'effet
+            const y = (e.clientY / window.innerHeight) * 5;
+            
+            container.style.transform = `translate(${x}px, ${y}px)`;
+        });
+
+        // Désactiver l'effet parallaxe sur mobile pour les performances
+        if (window.innerWidth <= 768) {
+            isMouseMoveEnabled = false;
+        }
+    </script>
+</body>
+</html>

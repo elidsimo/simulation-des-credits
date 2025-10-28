@@ -1,0 +1,1 @@
+[29-Aug-2025 00:46:04 Europe/Berlin] Erreur PDO dans forgot_password_process.php: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'simulation_credit.utilisateurs' doesn't exist

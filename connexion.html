@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Simulation de Crédits</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>Connexion</h1>
+            <p>Accédez à votre simulateur de crédits</p>
+        </div>
+
+
+        <form action="login.php" method="POST">
+            <div class="input-wrapper">
+                <input type="email" name="email" placeholder="Adresse email" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+
+            <div class="input-wrapper">
+                <input type="password" name="password" placeholder="Mot de passe" required>
+                <i class="fas fa-lock"></i>
+            </div>
+
+            <button type="submit" class="btn">Se connecter</button>
+
+            <div class="forgot-password">
+                <a href="#">Mot de passe oublié ?</a>
+            </div>
+
+            <div class="forgot-password" style="margin-top: 2rem;">
+                <p style="opacity: 0.8; margin-bottom: 0.5rem;">Pas encore de compte ?</p>
+                <a href="inscription.html" style="font-weight: 600;">Créer un compte</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
